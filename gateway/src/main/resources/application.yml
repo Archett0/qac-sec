@@ -1,11 +1,13 @@
 spring:
-  profiles:
-    active: cloud
+#  profiles:
+#    active: cloud
   cloud:
     consul:
       discovery:
         heartbeat:
           enabled: true
+      host: localhost
+      port: 8500
 
     gateway:
       default-filters:

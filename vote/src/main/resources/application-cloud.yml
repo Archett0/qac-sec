@@ -3,3 +3,6 @@ spring:
     consul:
       host: consul
       port: 8500
+  data:
+    mongodb:
+      uri: mongodb+srv://root:hHYVo4WUSPEpg7MZ@qacmongo.m3x0e.mongodb.net/vote?retryWrites=true&w=majority

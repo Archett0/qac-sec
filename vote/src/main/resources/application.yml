@@ -2,13 +2,13 @@ server:
   port: 8085
 
 spring:
-  profiles:
-    active: cloud
+#  profiles:
+#    active: cloud
   application:
     name: vote
   data:
     mongodb:
-      uri: mongodb+srv://root:hHYVo4WUSPEpg7MZ@qacmongo.m3x0e.mongodb.net/vote?retryWrites=true&w=majority
+      uri: mongodb+srv://root:123456@localhost/vote?retryWrites=true&w=majority
   cloud:
     consul:
       host: localhost

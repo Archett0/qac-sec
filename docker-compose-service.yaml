@@ -1,17 +1,17 @@
 services:
-  api-gateway:
-    build: gateway/
-    container_name: gateway
-    ports:
-      - "8080:8080"
-    networks:
-      - qac_default
-
-  qna:
-    build: QnA/
-    container_name: qna
-    networks:
-      - qac_default
+#  api-gateway:
+#    build: gateway/
+#    container_name: gateway
+#    ports:
+#      - "8080:8080"
+#    networks:
+#      - qac_default
+#
+#  qna:
+#    build: QnA/
+#    container_name: qna
+#    networks:
+#      - qac_default
 
   consul:
     image: consul:1.15.4
