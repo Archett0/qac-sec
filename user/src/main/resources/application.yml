@@ -30,6 +30,3 @@ spring:
         instance-id: ${spring.application.name}
         heartbeat:
           enabled: true
-jwt:
-  secretKey: 9eJ8grwCm6h2bXY7bCZzvQU9GRjVQWI9fXbXSY8/j8U=
-  validityInMilliseconds: 3600000
