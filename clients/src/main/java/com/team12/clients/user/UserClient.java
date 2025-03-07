@@ -17,7 +17,4 @@ public interface UserClient {
 
     @PostMapping("/getUserName")
     Map<UUID, String> getUsersByIds(@RequestBody List<UUID> userIds);
-
-    @PostMapping("/auth/validate")
-    Boolean validateToken(@RequestHeader("Authorization") String token);
 }
