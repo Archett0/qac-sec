@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -51,13 +50,6 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        log.info("Creating user: {}", user);
-        User createdUser = userService.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable UUID id, @RequestBody User user) {
         log.info("Updating user with id: {}", id);
@@ -92,16 +84,14 @@ public class UserController {
                 .toList();
 
     }
+
     @GetMapping("/profile/{id}")
     public ResponseEntity<UserDto> getUserProfileById(@PathVariable UUID id) {
         User user = userService.getUserById(id);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-
-
         UserDto userDto = new UserDto(user.getId(), user.getUsername(), user.getEmail());
         return ResponseEntity.ok(userDto);
     }
-
 }

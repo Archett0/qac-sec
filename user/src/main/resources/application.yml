@@ -30,3 +30,17 @@ spring:
         instance-id: ${spring.application.name}
         heartbeat:
           enabled: true
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: "*"
+    security:
+      enabled: false
+
+auth0:
+  domain: dev-jr5iip1iu6v8pylo.us.auth0.com
+  audience: https://dev-jr5iip1iu6v8pylo.us.auth0.com/api/v2/
+  client-id: sXjfW7Ddyh5M7TitBBsm26Y9gsIStmdH
+  client-secret: 49jsxl5AjYki5UX9coS_LAwIyYsPI7tbKmTy-vHYAZhnzvN18q5z2CL1qDjpzXU8
+  management-api-url: https://dev-jr5iip1iu6v8pylo.us.auth0.com/api/v2

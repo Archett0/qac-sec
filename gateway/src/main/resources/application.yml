@@ -1,6 +1,15 @@
 spring:
 #  profiles:
 #    active: cloud
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-jr5iip1iu6v8pylo.us.auth0.com/
+          audiences: https://qac.com
+          jwk-set-uri: https://dev-jr5iip1iu6v8pylo.us.auth0.com/.well-known/jwks.json
+
   cloud:
     consul:
       discovery:
