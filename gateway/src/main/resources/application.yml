@@ -26,7 +26,7 @@ spring:
         corsConfigurations:
           '[/**]':
             allowedOrigins:
-              - "http://localhost:5173"
+              - "https://localhost:5173"
             allowedMethods:
               - "GET"
               - "POST"
@@ -99,3 +99,9 @@ management:
       show-details: always
     gateway:
       enabled: true
+
+server:
+  ssl:
+    key-store: classpath:certificate.pfx
+    key-store-password: Admin123
+    key-store-type: PKCS12
