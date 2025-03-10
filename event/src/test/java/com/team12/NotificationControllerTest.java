@@ -1,8 +1,6 @@
 package com.team12;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team12.clients.notification.dto.NotificationRequest;
 import com.team12.clients.notification.dto.NotificationType;
 import com.team12.event.notification.controller.NotificationController;
@@ -10,73 +8,104 @@ import com.team12.event.notification.entity.NotificationDTO;
 import com.team12.event.notification.service.NotificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@SpringBootTest
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@ExtendWith(MockitoExtension.class)
+@WebMvcTest(NotificationController.class)
 class NotificationControllerTest {
 
-//    private NotificationService notificationService;
-//    private NotificationController notificationController;
-//
-//    @BeforeEach
-//    void setUp() {
-//        notificationService = mock(NotificationService.class);
-//        notificationController = new NotificationController(notificationService);
-//    }
-//
-//    @Test
-//    void sendNotification_successful() {
-//        NotificationRequest request = new NotificationRequest(UUID.randomUUID(),"Notification content", NotificationType.COMMENT_POSTED);
-//
-//        doNothing().when(notificationService).sendNotification(request);
-//
-//        notificationController.sendNotification(request);
-//
-//        verify(notificationService, times(1)).sendNotification(request);
-//    }
-//
-//    @Test
-//    void getNotificationsById_successful() {
-//        UUID userId = UUID.randomUUID();
-//
-//        List<NotificationDTO> notifications = Collections.singletonList(new NotificationDTO("Notification content", LocalDateTime.now(), NotificationType.COMMENT_POSTED));
-//
-//        when(notificationService.getNotificationListById(userId)).thenReturn(Optional.of(notifications));
-//        ResponseEntity<List<NotificationDTO>> response = notificationController.getNotificationsById(userId);
-//        verify(notificationService, times(1)).getNotificationListById(userId);
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals(notifications, response.getBody());
-//    }
-//
-//
-//
-//    @Test
-//    void deleteNotification_successful() {
-//        UUID userId = UUID.randomUUID();
-//        when(notificationService.notificationDelete(userId, 1)).thenReturn(true);
-//
-//        ResponseEntity<String> response = notificationController.deleteNotification(userId, 1);
-//
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals("Deleted notification successfully.", response.getBody());
-//    }
-//
-//    @Test
-//    void deleteNotification_notFound() {
-//        UUID userId = UUID.randomUUID();
-//        when(notificationService.notificationDelete(userId, 1)).thenReturn(false);
-//
-//        ResponseEntity<String> response = notificationController.deleteNotification(userId, 1);
-//
-//        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-//        assertEquals("Notification not found or empty", response.getBody());
-//    }
+    @MockBean
+    private NotificationService notificationService;
+
+    @InjectMocks
+    private NotificationController notificationController;
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(notificationController).build();
+    }
+
+    @Test
+    void sendNotification_ShouldReturnOk() throws Exception {
+        NotificationRequest request = new NotificationRequest(UUID.randomUUID(), "Test message", NotificationType.COMMENT_POSTED);
+
+        doNothing().when(notificationService).sendNotification(any(NotificationRequest.class));
+
+        mockMvc.perform(post("/api/v1/notification")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+
+        verify(notificationService, times(1)).sendNotification(any(NotificationRequest.class));
+    }
+
+    @Test
+    void getNotificationsById_ShouldReturnNotificationList() throws Exception {
+        UUID userId = UUID.randomUUID();
+        List<NotificationDTO> notifications = List.of(new NotificationDTO("Test Message", null, NotificationType.UPVOTE_RECEIVED));
+
+        when(notificationService.getNotificationListById(userId)).thenReturn(Optional.of(notifications));
+
+        mockMvc.perform(get("/api/v1/notification/" + userId + "/"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].message").value("Test Message"));
+    }
+
+    @Test
+    void getNotificationsById_ShouldReturnEmptyList_WhenNoNotifications() throws Exception {
+        UUID userId = UUID.randomUUID();
+
+        when(notificationService.getNotificationListById(userId)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/api/v1/notification/" + userId + "/"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
+    }
+
+    @Test
+    void deleteNotification_ShouldReturnOk_WhenDeleted() throws Exception {
+        UUID userId = UUID.randomUUID();
+        int type = 1;
+
+        when(notificationService.notificationDelete(userId, type)).thenReturn(true);
+
+        mockMvc.perform(delete("/api/v1/notification/deleteNotification/" + userId + "/" + type))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Deleted notification successfully."));
+    }
+
+    @Test
+    void deleteNotification_ShouldReturnNotFound_WhenNotDeleted() throws Exception {
+        UUID userId = UUID.randomUUID();
+        int type = 1;
+
+        when(notificationService.notificationDelete(userId, type)).thenReturn(false);
+
+        mockMvc.perform(delete("/api/v1/notification/deleteNotification/" + userId + "/" + type))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Notification not found or empty"));
+    }
 }
