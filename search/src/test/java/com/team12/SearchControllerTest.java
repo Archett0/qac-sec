@@ -34,7 +34,7 @@ class SearchControllerTest {
     private List<UserDto> mockUsers;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         // Mock questions data
         mockQuestions = Arrays.asList(
                 new QuestionDto(UUID.randomUUID(), "First Question", "This is the first question content", UUID.randomUUID()),

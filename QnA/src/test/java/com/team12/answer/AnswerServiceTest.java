@@ -2,7 +2,6 @@ package com.team12.answer;
 
 import com.team12.clients.notification.NotificationClient;
 import com.team12.clients.notification.dto.NotificationRequest;
-import com.team12.clients.notification.dto.NotificationType;
 import com.team12.question.Question;
 import com.team12.question.QuestionService;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class AnswerServiceTest {
+class AnswerServiceTest {
 
     @Mock
     private AnswerRepository answerRepository;
