@@ -7,8 +7,8 @@ spring:
   application:
     name: event
   datasource:
-    url: jdbc:mysql://localhost:3306/event
-#    url: jdbc:mysql://mysql-container:3306/event
+#    url: jdbc:mysql://localhost:3306/event
+    url: jdbc:mysql://mysql-container:3306/event
     username: root
     password: 123456
   jpa:
@@ -21,7 +21,8 @@ spring:
     show-sql: true
   cloud:
     consul:
-      host: localhost
+      host: consul-container
+#      host: localhost
       port: 8500
       discovery:
         register: true
@@ -31,7 +32,8 @@ spring:
         heartbeat:
           enabled: true
   rabbitmq:
-    host: localhost
+#    host: localhost
+    host: rabbitmq-container
     port: 5672
     username: admin
     password: 123456

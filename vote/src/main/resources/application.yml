@@ -8,10 +8,12 @@ spring:
     name: vote
   data:
     mongodb:
-      uri: mongodb://root:123456@localhost:27017/vote?authSource=admin&retryWrites=true&w=majority
+      uri: mongodb://root:123456@mongodb-container:27017/vote?authSource=admin&retryWrites=true&w=majority
+#      uri: mongodb://root:123456@localhost:27017/vote?authSource=admin&retryWrites=true&w=majority
   cloud:
     consul:
-      host: localhost
+      host: consul-container
+#      host: localhost
       port: 8500
       discovery:
         register: true

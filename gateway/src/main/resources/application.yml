@@ -15,7 +15,8 @@ spring:
       discovery:
         heartbeat:
           enabled: true
-      host: localhost
+      host: consul-container
+#      host: localhost
       port: 8500
 
     gateway:
