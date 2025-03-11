@@ -31,8 +31,8 @@ public class QuestionService {
         if (contentReviewChain.review(request.content())) {
             return questionRepository.save(
                     Question.builder()
-                            .title(request.title())
-                            .content(request.content())
+                            .title(sanitizeInput(request.title()))
+                            .content(sanitizeInput(request.content()))
                             .ownerId(request.ownerId())
                             .createdAt(LocalDateTime.now())
                             .build()
@@ -71,5 +71,9 @@ public class QuestionService {
     // Find Questions by Owner ID
     public List<Question> getQuestionsByOwnerId(UUID ownerId) {
         return questionRepository.findByOwnerId(ownerId);
+    }
+
+    public String sanitizeInput(String input) {
+        return input.replace("<", "&lt;").replace(">", "&gt;").trim();
     }
 }
