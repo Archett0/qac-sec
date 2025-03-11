@@ -19,6 +19,8 @@ public class SecurityConfig {
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
                         .pathMatchers("/public/**").permitAll()
+                        .pathMatchers(HttpMethod.PUT, "/user/*").hasRole("ADMIN")
+                        .pathMatchers(HttpMethod.DELETE, "/user/*").hasRole("ADMIN")
                         .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
@@ -31,7 +33,7 @@ public class SecurityConfig {
     @Bean
     public ReactiveJwtAuthenticationConverterAdapter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        grantedAuthoritiesConverter.setAuthoritiesClaimName("permissions");
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("https://your-api.com/role");
         grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
