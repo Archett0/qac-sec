@@ -19,13 +19,15 @@ public class SecurityConfig {
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
                         .pathMatchers("/public/**").permitAll()
+                        .pathMatchers("/actuator/**").permitAll()
                         .pathMatchers(HttpMethod.PUT, "/user/*").hasRole("ADMIN")
                         .pathMatchers(HttpMethod.DELETE, "/user/*").hasRole("ADMIN")
                         .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
-                );
+                )
+                .csrf(ServerHttpSecurity.CsrfSpec::disable);
 
         return http.build();
     }
