@@ -1,5 +1,6 @@
 package com.team12.question;
 
+import com.team12.encrypt.AESEncryptionConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,9 +23,11 @@ public class Question {
     private UUID id;
 
     @Column(nullable = false, length = 255)
+    @Convert(converter = AESEncryptionConverter.class)
     private String title;
 
     @Column(nullable = false, columnDefinition = "TEXT")
+    @Convert(converter = AESEncryptionConverter.class)
     private String content;
 
     @Column(updatable = false)
