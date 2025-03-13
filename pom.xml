@@ -29,7 +29,7 @@
         <spring.cloud-version>2022.0.3</spring.cloud-version>
         <sonar.exclusions>**/JwtAuthenticationFilter.java, **/JwtUtil.java, **/JwtTokenAuthenticationStrategy.java,
             **/Auth0Service.java, **/UserService.java, **/VoteService.java, **/AESUtil.java,
-            **/AESEncryptionConverter.java, SecurityConfig.java
+            **/AESEncryptionConverter.java, **/SecurityConfig.java
         </sonar.exclusions>
     </properties>
 
